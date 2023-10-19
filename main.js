@@ -30,6 +30,8 @@ function onSubmit(e) {
              mobile
          };
         
+        //  Saving the user Details on Crud Crud
+
         axios.post("https://crudcrud.com/api/ec9d5ab6f8fe4bf99e49669b54cf185c/appointmentData", user, {
             headers: {
                 'Content-Type': 'application/json'
@@ -43,37 +45,48 @@ function onSubmit(e) {
             document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>";
             console.log(err);
         });
-        
-
-        // Get the saved User Details from crudcrud.
-
-        axios.get("https://crudcrud.com/api/ec9d5ab6f8fe4bf99e49669b54cf185c/appointmentData")
-        .then((response) => {
-            console.log(response)
-            for(var i = 0; i < response.data.length; i++) {
-                showUserOnScreen(response.data[i])
-            }
-        })
-        .catch((error) => {
-            console.log(error)
-        })
 
         // localStorage.setItem(user.name , JSON.stringify(user));
         // showUserOnScreen(user);
+
     }
 }
 
+
+// Get the saved User Details from crudcrud.
+
+window.addEventListener("DOMContentLoaded" , () => {
+    axios.get("https://crudcrud.com/api/ec9d5ab6f8fe4bf99e49669b54cf185c/appointmentData")
+      .then((res) => {
+        console.log(res)
+        for(var i=0;i<res.data.length;i++){
+            showUserOnScreen(res.data[i]);
+        }
+      })
+      .catch((error) => console.log(error))
+  })
+
+
 function showUserOnScreen(user){
         let li = document.createElement('li');
-        let details = document.createTextNode(`${nameInput.value} : ${emailInput.value} : ${mobileInput.value} `);
+        let details = document.createTextNode(`${user.name} : ${user.email} : ${user.mobile} `);
 
         let deleteBtn = document.createElement('input');
         deleteBtn.type = 'button';
         deleteBtn.value = "Delete";
         deleteBtn.style.backgroundColor = 'lightPink';
         deleteBtn.onclick = () => {
-            localStorage.removeItem(user.name);
+            // localStorage.removeItem(user.name);
             userList.removeChild(li);
+
+            //Sending a DELETE Request to CRUD API
+            
+            axios.delete(`https://crudcrud.com/api/ec9d5ab6f8fe4bf99e49669b54cf185c/appointmentData/${user._id}`)
+            .then((res) => {
+                userList.removeChild(li);
+            })
+            .catch((error) => console.log(error));
+            
         }
 
         let editBtn = document.createElement('input');
@@ -98,3 +111,5 @@ function showUserOnScreen(user){
         emailInput.value = ' ';
         mobileInput.value = ' ';
 }
+
+
