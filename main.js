@@ -30,23 +30,36 @@ function onSubmit(e) {
              mobile
          };
         
-        // axios.post("https://crudcrud.com/api/d3a6989642744ae794674d50d725fbb4/appointmentData", user, {
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // })
-        // .then((response) => {
-        //     showUserOnScreen(response.data);
-        //     console.log(response);
-        // })
-        // .catch((err) => {
-        //     document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>";
-        //     console.log(err);
-        // });
+        axios.post("https://crudcrud.com/api/ec9d5ab6f8fe4bf99e49669b54cf185c/appointmentData", user, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            showUserOnScreen(response.data);
+            console.log(response);
+        })
+        .catch((err) => {
+            document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>";
+            console.log(err);
+        });
         
 
-        localStorage.setItem(user.name , JSON.stringify(user));
-        showUserOnScreen(user);
+        // Get the saved User Details from crudcrud.
+
+        axios.get("https://crudcrud.com/api/ec9d5ab6f8fe4bf99e49669b54cf185c/appointmentData")
+        .then((response) => {
+            console.log(response)
+            for(var i = 0; i < response.data.length; i++) {
+                showUserOnScreen(response.data[i])
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+
+        // localStorage.setItem(user.name , JSON.stringify(user));
+        // showUserOnScreen(user);
     }
 }
 
