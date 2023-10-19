@@ -80,7 +80,7 @@ function showUserOnScreen(user){
             userList.removeChild(li);
 
             //Sending a DELETE Request to CRUD API
-            
+
             axios.delete(`https://crudcrud.com/api/ec9d5ab6f8fe4bf99e49669b54cf185c/appointmentData/${user._id}`)
             .then((res) => {
                 userList.removeChild(li);
@@ -99,6 +99,42 @@ function showUserOnScreen(user){
             document.getElementById('name').value = user.name;
             document.getElementById('email').value = user.email;
             document.getElementById('mobile').value = user.mobile;
+
+            
+            // Update the user Details
+
+            myForm.removeEventListener('submit', onSubmit);
+
+            myForm.addEventListener('submit' , (e) => {
+            e.preventDefault();
+
+            const updatedUser = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mobile: document.getElementById('mobile').value
+            };
+
+            axios
+              .put(`https://crudcrud.com/api/ec9d5ab6f8fe4bf99e49669b54cf185c/appointmentData/${user._id}`, updatedUser)
+              .then((res) => {
+                //Update the user object
+                user.name = updatedUser.name;
+                user.email = updatedUser.email;
+                user.mobile = updatedUser.mobile;
+                //Update the details text node
+                details.nodeValue = `${user.name} : ${user.email} : ${user.mobile}`;
+                //Clear the form after updating
+                nameInput.value = '';
+                emailInput.value = '';
+                mobileInput.value = '';
+              })
+              .catch((error) => console.log(error))
+
+              //Restore the original Event Listener
+              myForm.addEventListener('submit' , onSubmit);
+        })
+
+
         }
 
         li.appendChild(details);
